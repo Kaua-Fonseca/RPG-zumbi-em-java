@@ -1,0 +1,4 @@
+//voce deve criar uma aquivo "config.properties" e colocar sua chave api
+// estou usando gemini então tem que ser de la
+
+gemini.api.key=SUA-CHAVE-API
