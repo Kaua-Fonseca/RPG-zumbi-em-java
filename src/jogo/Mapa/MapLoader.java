@@ -90,7 +90,8 @@ public class MapLoader {
             case 2 -> new Npc('M', x, y, 50, 50, 1, "Grrr!", "Zumbi Comum", "Zumbi Lento");
             case 3 -> new Npc('N', x, y, 100, 100, 2, "Saia daqui!", "Sgt. Rocha", "Soldado");
             case 4 -> new Npc('M', x, y, 200, 200, 5, "ROAAR!", "Tanker", "Zumbi Gigante e Furioso");
-            default -> new Npc('N', x, y, 80, 80, 1, "Oi.", "Zeca " + 1, "Civil");
+            case 5 -> new Npc('N', x, y, 100, 100, 9, "sou um mercador", "Ronald", "um vendedor ambulante em meio ao apocalipse zumbi, oque sera que ele tem");
+            default -> new Npc('N', x, y, 80, 80, 1, "Oi.", "simples sobrevivente " + 1, "Civil perdido sem muita importancia");
         };
     }
 

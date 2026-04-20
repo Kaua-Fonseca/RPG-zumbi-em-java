@@ -6,7 +6,7 @@ public class GeminiServices {
 
     private Client client;
 
-    private final String modeloGemini = "gemini-robotics-er-1.5-preview";
+    private final String modeloGemini = "gemini-robotics-er-1.6-preview";
 
     private final String promptSistema =
             "Você é o mestre de um jogo de RPG de sobrevivência zumbi. " +

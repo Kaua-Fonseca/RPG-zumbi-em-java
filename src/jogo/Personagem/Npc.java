@@ -9,11 +9,13 @@ public class Npc extends Entidade implements Interacao {
     private final String nome;
     private final String papel; // Ex: "Médico", "Sobrevivente", "Guarda"
     private String historicoConversa = "";
+    private int nivel;
 
     public Npc(char simbolo, int x, int y, int hp, int hpMaximo, int nivel, String dialogo, String nome, String papel) {
         super(simbolo, hp, hpMaximo, nivel, x, y, Color.RED, new Mochila("Mochila I", 10, 20));
         this.dialogoPadrao = dialogo;
         this.nome = nome;
+        this.nivel = nivel;
         this.papel = papel;
     }
 
@@ -24,6 +26,7 @@ public class Npc extends Entidade implements Interacao {
     public void adicioanarHistoricoConversa(String fala) {
         this.historicoConversa += fala + "\n";
     }
+    public int getNivel() { return nivel; }
 
     @Override
     public String interagir() {

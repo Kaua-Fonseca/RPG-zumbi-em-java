@@ -225,22 +225,23 @@ public class Layout extends JFrame {
     // --- MÉTODOS DE AÇÃO (Encapsulamento) ---
 
     private void processarEnvioMensagem() {
+
         if (!modoChat) return;
 
         String msg = campoInput.getText().trim();
         if (msg.isEmpty()) return;
 
-        // limpa chat visual SEMPRE
-        areaChat.setText("");
-
         int hp = jogo.getPlayer().getHp();
         int nivel = jogo.getPlayer().getNivel();
+        String statusPlayer = "";
 
-        imprimirNoConsole("[STATUS: HP " + hp + " | LV: " + nivel + "]", Color.ORANGE);
-        imprimirNoConsole("Player: " + msg, COR_BORDA_CHAT);
+        statusPlayer = String.format(
+                "[STATUS HP: %d | LV: %d  | \nplayer: ",
+                        hp, nivel
+        );
 
         String respostaFinal = "Não há ninguém por perto...";
-        String nomeNpc = "";
+        String statusNpc = "";
 
         npcAtual = null;
 
@@ -256,7 +257,11 @@ public class Layout extends JFrame {
 
         if (npcAtual != null) {
 
-            nomeNpc = npcAtual.getNome() + ": ";
+            statusNpc = String.format("HP: %d | LV: %d | \n%s: ",
+                    npcAtual.getHp(),
+                    npcAtual.getNivel(),
+                    npcAtual.getNome()
+            );
 
             jogo.Gemini.GeminiServices gemini =
                     new jogo.Gemini.GeminiServices();
@@ -279,7 +284,8 @@ public class Layout extends JFrame {
             npcAtual.adicioanarHistoricoConversa("NPC: " + respostaFinal);
         }
 
-        imprimirNoConsole(nomeNpc + respostaFinal, COR_BORDA_CHAT);
+
+        imprimirNoConsole(statusPlayer + msg + "\n\n"+ statusNpc  + respostaFinal + "\n");
 
         atualizarExibicaoMapa();
         alternarEstadoChat(false);
@@ -429,7 +435,7 @@ public class Layout extends JFrame {
         doc.insertString(doc.getLength(), c + " ", style);
     }
 
-    public void imprimirNoConsole(String texto, Color cor) {
+    public void imprimirNoConsole(String texto) {
         areaChat.setText("");
         areaChat.append(texto + "\n");
         areaChat.setCaretPosition(areaChat.getDocument().getLength());
@@ -466,7 +472,7 @@ public class Layout extends JFrame {
             if (pressionada) {
                 if (tecla == 'I') {
                     String resultado = jogo.realizarInteracao();
-                    imprimirNoConsole(resultado, Color.LIGHT_GRAY);
+                    imprimirNoConsole(resultado);
                     atualizarExibicaoMapa();
                 } else {
                     jogo.moverPlayer(tecla);
