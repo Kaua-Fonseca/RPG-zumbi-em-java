@@ -29,7 +29,6 @@ public class Tile {
     public boolean isPisavel() {return pisavel;}
     public Color getColor() {return color;}
     public Interacao getObejetoInteracao() {return ObejetoInteracao;}
-    public void setObejetoInteracao(Interacao ObejetoInteracao) {this.ObejetoInteracao = ObejetoInteracao;}
 
 
 }

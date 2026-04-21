@@ -2,6 +2,7 @@ package jogo.Mapa;
 
 import jogo.Personagem.Jogador;
 import jogo.Personagem.Npc;
+import jogo.Personagem.Npcs;
 import jogo.Tile.Tile;
 import java.awt.Color;
 import java.io.BufferedReader;
@@ -9,6 +10,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class MapLoader {
 
@@ -54,10 +56,15 @@ public class MapLoader {
         if (caractere == '@') {
             res.player = new Jogador(x, y, 100, 1, 1, 20, 200);
             res.mapa.setTile(x, y, new Tile('.', true, mapearCor(0)));
-        } else if (caractere == 'N' || caractere == 'M') {
-            res.npcs.add(criarNpcDinamico(x, y));
-            res.mapa.setTile(x, y, new Tile('.', true, mapearCor(0)));
-        } else if (caractere == 'S') {
+        }
+        else if (caractere == 'N' || caractere == 'M') {
+            Npcs tipoSorteado = Npcs.sortearPorTipo(caractere);
+            if (tipoSorteado != null) {
+                res.npcs.add(tipoSorteado.criar(x,y, res.mapa.getNome()));
+                res.mapa.setTile(x, y, new Tile('.', true, mapearCor(0)));
+            }
+        }
+        else if (caractere == 'S') {
             String destino = (partes.length > 2) ? partes[2] : null;
 
             int spawnX = 0;
@@ -81,24 +88,11 @@ public class MapLoader {
         }
     }
 
-    private static int nextId = 1;
-    private static Npc criarNpcDinamico(int x, int y) {
-        int id = nextId++;
-
-        return switch (nextId) {
-            case 1 -> new Npc('N', x, y, 100, 100, 1, "Remédios...", "Dr. Albert", "Médico");
-            case 2 -> new Npc('M', x, y, 50, 50, 1, "Grrr!", "Zumbi Comum", "Zumbi Lento");
-            case 3 -> new Npc('N', x, y, 100, 100, 2, "Saia daqui!", "Sgt. Rocha", "Soldado");
-            case 4 -> new Npc('M', x, y, 200, 200, 5, "ROAAR!", "Tanker", "Zumbi Gigante e Furioso");
-            case 5 -> new Npc('N', x, y, 100, 100, 9, "sou um mercador", "Ronald", "um vendedor ambulante em meio ao apocalipse zumbi, oque sera que ele tem");
-            default -> new Npc('N', x, y, 80, 80, 1, "Oi.", "simples sobrevivente " + 1, "Civil perdido sem muita importancia");
-        };
-    }
-
-    private static Color mapearCor(int codigo) {
+    private static Color mapearCor ( int codigo){
         return switch (codigo) {
             case 0 -> new Color(50, 50, 50);
             case 3 -> Color.GREEN;
+            case 4 -> new Color(212, 148, 0);
             case 5 -> Color.GRAY;
             default -> Color.WHITE;
         };

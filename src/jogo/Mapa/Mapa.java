@@ -1,5 +1,6 @@
 package jogo.Mapa;
 
+import jogo.Personagem.Npc;
 import jogo.Tile.Tile;
 
 public class Mapa {

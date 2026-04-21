@@ -125,7 +125,7 @@ public class Layout extends JFrame {
         areaChat.setBackground(new Color(20, 20, 20));
         areaChat.setForeground(new Color(200, 200, 200));
         areaChat.setFont(new Font("Consolas", Font.PLAIN, 18));
-        areaChat.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+        areaChat.setBorder(BorderFactory.createEmptyBorder(7, 7, 7, 7));
         areaChat.setEditable(false);
         areaChat.setFocusable(false);
         areaChat.setEnabled(false);
@@ -222,74 +222,84 @@ public class Layout extends JFrame {
         campoInput.addActionListener(e -> processarEnvioMensagem());
     }
 
-    // --- MÉTODOS DE AÇÃO (Encapsulamento) ---
+    // metodo que conversa com a IA
 
     private void processarEnvioMensagem() {
 
         if (!modoChat) return;
 
         String msg = campoInput.getText().trim();
-        if (msg.isEmpty()) return;
+
+        // ENTER vazio = sair do chat
+        if (msg.isEmpty()) {
+            if (npcAtual != null) {
+                imprimirNoConsole("Você encerrou a conversa com " + npcAtual.getNome());
+            } else {
+                imprimirNoConsole("Não há ninguém por perto.");
+            }
+
+            npcAtual = null;
+            alternarEstadoChat(false);
+            return;
+        }
+
+        // se não tem npc
+        if (npcAtual == null) {
+            imprimirNoConsole("Não há ninguém por perto...");
+            alternarEstadoChat(false);
+            return;
+        }
 
         int hp = jogo.getPlayer().getHp();
         int nivel = jogo.getPlayer().getNivel();
-        String statusPlayer = "";
 
-        statusPlayer = String.format(
-                "[STATUS HP: %d | LV: %d  | \nplayer: ",
-                        hp, nivel
+        String statusPlayer = String.format(
+                "[STATUS HP: %d | LV: %d]\nplayer: ",
+                hp, nivel
         );
 
-        String respostaFinal = "Não há ninguém por perto...";
-        String statusNpc = "";
+        String statusNpc = String.format(
+                "HP: %d | LV: %d |\n%s: \n",
+                npcAtual.getHp(),
+                npcAtual.getNivel(),
+                npcAtual.getNome()
+        );
 
-        npcAtual = null;
+        jogo.Gemini.GeminiServices gemini =
+                new jogo.Gemini.GeminiServices();
 
-        for (Npc npc : jogo.getNpcs()) {
+        String contexto = String.format(
+                "Você está em %s\n" +
+                        "Você é um NPC chamado %s (%s).\n" +
+                        "Memória: %s\n\n" +
+                        "Jogador: %s",
+                npcAtual.getNomeMapa(),
+                npcAtual.getNome(),
+                npcAtual.getPapel(),
+                npcAtual.getHistoricoConversa(),
+                msg
+        );
 
-            if (npc.getX() == jogo.getPlayer().getX()
-                    && npc.getY() == jogo.getPlayer().getY()) {
+        String resposta = gemini.conversar(contexto, msg);
 
-                npcAtual = npc;
-                break;
-            }
-        }
+        if (resposta != null && !resposta.isBlank()) {
 
-        if (npcAtual != null) {
+            npcAtual.adicionarHistoricoConversa("Jogador: " + msg);
+            npcAtual.adicionarHistoricoConversa("NPC: " + resposta);
 
-            statusNpc = String.format("HP: %d | LV: %d | \n%s: ",
-                    npcAtual.getHp(),
-                    npcAtual.getNivel(),
-                    npcAtual.getNome()
+            imprimirNoConsole(
+                    statusPlayer + msg + "\n\n" +
+                            statusNpc + resposta + "\n"
             );
 
-            jogo.Gemini.GeminiServices gemini =
-                    new jogo.Gemini.GeminiServices();
-
-            String contexto = String.format(
-                    "Você é um NPC de RPG chamado %s (%s).\n" +
-                            "Você já conhece o jogador e lembra interações anteriores.\n" +
-                            "Memória: %s\n\n" +
-                            "Jogador diz: %s",
-                    npcAtual.getNome(),
-                    npcAtual.getPapel(),
-                    npcAtual.getHistoricoConversa(),
-                    msg
-            );
-
-            respostaFinal = gemini.conversar(contexto, msg);
-
-            // salva memória do NPC
-            npcAtual.adicioanarHistoricoConversa("Jogador: " + msg);
-            npcAtual.adicioanarHistoricoConversa("NPC: " + respostaFinal);
+        } else {
+            imprimirNoConsole("O NPC não respondeu... tente novamente.");
         }
-
-
-        imprimirNoConsole(statusPlayer + msg + "\n\n"+ statusNpc  + respostaFinal + "\n");
-
+        campoInput.setText("");
         atualizarExibicaoMapa();
-        alternarEstadoChat(false);
     }
+
+    // --- MÉTODOS DE AÇÃO (Encapsulamento) ---
 
     private void alternarEstadoChat(boolean ativar) {
         this.modoChat = ativar;
@@ -471,11 +481,38 @@ public class Layout extends JFrame {
 
             if (pressionada) {
                 if (tecla == 'I') {
-                    String resultado = jogo.realizarInteracao();
-                    imprimirNoConsole(resultado);
+
+                    Npc npc = jogo.getNpcNaPosicao();
+
+                    if (npc != null) {
+                        npcAtual = npc;
+                        alternarEstadoChat(true);
+                        imprimirNoConsole("Você começou a conversar com " + npc.getNome());
+                    } else {
+                        Tile tile = jogo.getTileAtual();
+
+                        if (tile.getObejetoInteracao() != null) {
+                            imprimirNoConsole(tile.getObejetoInteracao().interagir());
+                        } else {
+                            imprimirNoConsole("Não há nada aqui.");
+                        }
+                    }
+
                     atualizarExibicaoMapa();
+
                 } else {
                     jogo.moverPlayer(tecla);
+
+                    if (npcAtual != null) {
+                        if (npcAtual.getX() != jogo.getPlayer().getX() || npcAtual.getY() != jogo.getPlayer().getY()) {
+
+                            String nomeNpc = npcAtual.getNome();
+
+                            npcAtual = null;
+                            alternarEstadoChat(false);
+                            imprimirNoConsole("você se afastou do " + nomeNpc);
+                        }
+                    }
                     atualizarExibicaoMapa();
                 }
             }

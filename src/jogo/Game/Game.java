@@ -63,30 +63,19 @@ public class Game {
     }
 
 
-    public String realizarInteracao() {
-        // 1. Verifica se existe um NPC EXATAMENTE onde o player está
+    public Npc getNpcNaPosicao() {
         for (Npc npc : npcs) {
             if (npc.getX() == player.getX() && npc.getY() == player.getY()) {
-
-                // Instancia o serviço da IA
-                jogo.Gemini.GeminiServices gemini = new jogo.Gemini.GeminiServices();
-
-                // Pega os dados que o MapLoader configurou
-                String ficha = "Nome: " + npc.getNome() + ", Papel: " + npc.getPapel();
-
-                // Envia para o Gemini
-                return gemini.conversar(ficha, "O jogador interagiu com você e iniciou uma conversa.");
+                return npc;
             }
         }
-
-        // 2. Verifica se é um objeto de cenário (Tile) no mesmo lugar
-        Tile tileAtual = mapa.getTile(player.getX(), player.getY());
-        if (tileAtual.getObejetoInteracao() != null) {
-            return tileAtual.getObejetoInteracao().interagir();
-        }
-
-        return "Não há nada aqui.";
+        return null;
     }
+
+    public Tile getTileAtual() {
+        return mapa.getTile(player.getX(), player.getY());
+    }
+
 
     /**
      * Gera uma representação em String (ASCII) do estado atual do mapa.
