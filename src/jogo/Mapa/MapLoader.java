@@ -63,6 +63,8 @@ public class MapLoader {
                 res.npcs.add(tipoSorteado.criar(x,y, res.mapa.getNome()));
                 res.mapa.setTile(x, y, new Tile('.', true, mapearCor(0)));
             }
+        } else if ( caractere == 'B') {
+            res.mapa.setTile(x, y, new Tile('B', true, cor));
         }
         else if (caractere == 'S') {
             String destino = (partes.length > 2) ? partes[2] : null;
@@ -91,9 +93,11 @@ public class MapLoader {
     private static Color mapearCor ( int codigo){
         return switch (codigo) {
             case 0 -> new Color(50, 50, 50);
+            case 1 -> Color.CYAN;
             case 3 -> Color.GREEN;
             case 4 -> new Color(212, 148, 0);
             case 5 -> Color.GRAY;
+            case 6 -> new Color(130, 32, 149);
             default -> Color.WHITE;
         };
     }

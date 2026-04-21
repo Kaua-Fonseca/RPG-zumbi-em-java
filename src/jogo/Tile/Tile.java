@@ -1,7 +1,4 @@
 package jogo.Tile;
-
-import jogo.Interacao.Interacao;
-
 import java.awt.*;
 
 public class Tile {
@@ -9,7 +6,6 @@ public class Tile {
     private boolean pisavel;
     private Color color;
     private String destinoMapa;
-    private Interacao ObejetoInteracao;
     private int spawnX;
     private int spawnY;
 
@@ -28,7 +24,6 @@ public class Tile {
     public char getSimbolo() {return simbolo;}
     public boolean isPisavel() {return pisavel;}
     public Color getColor() {return color;}
-    public Interacao getObejetoInteracao() {return ObejetoInteracao;}
 
 
 }

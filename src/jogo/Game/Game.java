@@ -5,6 +5,8 @@ import jogo.Mapa.Mapa;
 import jogo.Personagem.Jogador;
 import jogo.Personagem.Npc;
 import jogo.Tile.Tile;
+import jogo.front.Layout;
+
 import java.util.List;
 
 public class Game {
@@ -68,6 +70,14 @@ public class Game {
             if (npc.getX() == player.getX() && npc.getY() == player.getY()) {
                 return npc;
             }
+        }
+        return null;
+    }
+
+    public String getBauNaPosicao(int x, int y) {
+        Tile t = mapa.getTile(x, y);
+        if (t != null && t.getSimbolo() == 'B') {
+            return "Nada encontrado no baú.";
         }
         return null;
     }

@@ -1,7 +1,6 @@
 package jogo.Item;
-import jogo.Interacao.Interacao;
 
-public class Item implements Interacao {
+public class Item {
     private String nome;
     private double volumeLitros;
     private double pesoKg;
@@ -15,10 +14,6 @@ public class Item implements Interacao {
 
     }
 
-    @Override
-    public String interagir() {
-        return String.format("Item: %s | %s (Peso: %.2fkg | Vol: %.2fL", nome, descricao, volumeLitros);
-    }
 
     public String getNome() {
         return nome;

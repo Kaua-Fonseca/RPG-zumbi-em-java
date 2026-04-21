@@ -489,15 +489,16 @@ public class Layout extends JFrame {
                         alternarEstadoChat(true);
                         imprimirNoConsole("Você começou a conversar com " + npc.getNome());
                     } else {
-                        Tile tile = jogo.getTileAtual();
+                        int px = jogo.getPlayer().getX();
+                        int py = jogo.getPlayer().getY();
+                        String msgBau = jogo.getBauNaPosicao(px, py);
 
-                        if (tile.getObejetoInteracao() != null) {
-                            imprimirNoConsole(tile.getObejetoInteracao().interagir());
+                        if(msgBau != null) {
+                            imprimirNoConsole(msgBau);
                         } else {
                             imprimirNoConsole("Não há nada aqui.");
                         }
                     }
-
                     atualizarExibicaoMapa();
 
                 } else {

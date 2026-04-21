@@ -1,6 +1,5 @@
 package jogo.Personagem;
 
-import jogo.Interacao.Interacao;
 import jogo.Mochila.Mochila;
 import java.awt.*;
 
