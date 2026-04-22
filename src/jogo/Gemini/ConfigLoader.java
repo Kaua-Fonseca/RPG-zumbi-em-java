@@ -15,8 +15,8 @@ public class ConfigLoader {
                 props.load(fis);
                 String key = props.getProperty("gemini.api.key");
                 if (key != null) return key;
-            } catch (IOException ignored) {
-                // Tenta o próximo caminho se este falhar
+            } catch (IOException e) {
+                e.printStackTrace();
             }
 
         System.err.println("Não foi possível localizar o arquivo config.properties!");
