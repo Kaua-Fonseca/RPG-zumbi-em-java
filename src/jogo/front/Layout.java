@@ -27,8 +27,7 @@ import org.checkerframework.checker.units.qual.N;;
  * - Open/Closed: Facilmente estendível para novos modos de input (ex: mouse).
  * - Dependency Inversion: Depende da classe Modelos.Game.Game para obter dados do estado do jogo.
  *
- * @author IA de Apoio (Aula Didática)
- */
+ * */
 public class Layout extends JFrame {
 
     // --- DEPENDÊNCIA DO JOGO ---
